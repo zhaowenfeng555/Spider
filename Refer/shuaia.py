@@ -29,6 +29,7 @@ if __name__ == '__main__':
 	for each_img in list_url:
 		img_info = each_img.split('=')
 		target_url = img_info[1]
+		print (target_url)
 		filename = img_info[0] + '.jpg'
 		print('下载：' + filename)
 		headers = {
