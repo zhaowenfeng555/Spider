@@ -11,15 +11,24 @@
 import datetime
 from copy import deepcopy
 import sys
-reload(sys)
-
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+#
+# sys.setdefaultencoding('utf-8')
 
 import time
 import random
 import requests
 # import MySQLdb
 from bs4 import BeautifulSoup
+
+from selenium import webdriver
+import time
+from selenium.common.exceptions import TimeoutException
+#引入ActionChains鼠标操作类
+from selenium.webdriver.common.action_chains import ActionChains
+
+driver= webdriver.Chrome('/Library/Frameworks/Python.framework/Versions/3.6/chromedriver')
+driver.set_page_load_timeout(30)
 
 
 def fetch_url(url):
@@ -63,26 +72,20 @@ def process_spider():
     实际爬虫过程
     :return:
     """
-    fout = open('./result', 'w+')
-    for i in [10]:
-        # 本地保留一份数据
-        # file = open("./data/weibo_hot" + str(self.event_day) + "." + str(self.event_hour) + ".txt", "w+")
-        # mysql_list = []
-        # 获取url原始数据
-
-        url = 'https://creator.douyin.com/billboard/' + str(i)
-        soup = fetch_url(url)
-        # data = soup.find('d', {'class': 'o-pagemod-bd'}).find('div', {'class': 'o-exercise-list'})
-        # # 拉取每一个热搜榜数据
-        # for tr in data.find_all('li', {'class': 'hvr-glow'}):
-        #     dd = tr.find('div', {'class': 'avatar-pic'}).find('img')
-        #     x = str(dd).split('\"')
-        #     word = x[1].strip().split()[0]
-        #     fout.write(word + '\n')
-        data = soup.find('tbody', {'class': 'semi-table-tobody'})
-        x = data.find_all('td')[1].find('p')
-        print (x.text)
+    fout = open('./result_2', 'w+')
+    soup =  fetch_url('https://www.gotokeep.com/training')
+    ha = soup.find('div', {'class': 'keep-wrapper training'})
+    # print (a)
+    
+    ul = ha.find('ul', {'class': 'workout-hashtag clearfix'})
+    # print (ul)
+    for li in ul.find_all('li'):
+        xss = li.find('a').find('div', {'class': 'title'})
+        fout.write(xss.text + '\n')
 
 process_spider()
+
+
+
 
 

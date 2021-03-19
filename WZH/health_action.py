@@ -7,8 +7,6 @@
 """
 微博热搜爬虫
 
-Authors: zhaowenfeng(zhaowenfeng@baidu.com)
-Date:    2020/02/13
 """
 import datetime
 from copy import deepcopy

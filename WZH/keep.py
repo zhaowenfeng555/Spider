@@ -11,15 +11,24 @@
 import datetime
 from copy import deepcopy
 import sys
-reload(sys)
-
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+#
+# sys.setdefaultencoding('utf-8')
 
 import time
 import random
 import requests
 # import MySQLdb
 from bs4 import BeautifulSoup
+
+from selenium import webdriver
+import time
+from selenium.common.exceptions import TimeoutException
+#引入ActionChains鼠标操作类
+from selenium.webdriver.common.action_chains import ActionChains
+
+driver= webdriver.Chrome('/Library/Frameworks/Python.framework/Versions/3.6/chromedriver')
+driver.set_page_load_timeout(30)
 
 
 def fetch_url(url):
@@ -64,25 +73,40 @@ def process_spider():
     :return:
     """
     fout = open('./result', 'w+')
-    for i in [10]:
-        # 本地保留一份数据
-        # file = open("./data/weibo_hot" + str(self.event_day) + "." + str(self.event_hour) + ".txt", "w+")
-        # mysql_list = []
-        # 获取url原始数据
+    soup =  fetch_url('https://www.gotokeep.com/training')
+    ha = soup.find('div', {'class': 'keep-wrapper point'})
+    # print (a)
+    
+    ul = ha.find('ul', {'class': 'training-point clearfix'})
+    # print (ul)
+    for li in ul.find_all('li'):
+        xss = li.find('a')
+        hr = xss['href']
+        url = 'https://www.gotokeep.com' + str(hr)
 
-        url = 'https://creator.douyin.com/billboard/' + str(i)
-        soup = fetch_url(url)
-        # data = soup.find('d', {'class': 'o-pagemod-bd'}).find('div', {'class': 'o-exercise-list'})
-        # # 拉取每一个热搜榜数据
-        # for tr in data.find_all('li', {'class': 'hvr-glow'}):
-        #     dd = tr.find('div', {'class': 'avatar-pic'}).find('img')
-        #     x = str(dd).split('\"')
-        #     word = x[1].strip().split()[0]
-        #     fout.write(word + '\n')
-        data = soup.find('tbody', {'class': 'semi-table-tobody'})
-        x = data.find_all('td')[1].find('p')
-        print (x.text)
+        driver.get(url)
+
+        # 加载到底部
+        all_window_height = []
+        all_window_height.append(driver.execute_script("return document.body.scrollHeight;"))
+        while True:
+            driver.execute_script("scroll(0,100000)")  # 执行拖动滚动条操作
+            time.sleep(3)
+            check_height = driver.execute_script("return document.body.scrollHeight;")
+            if check_height == all_window_height[-1]:
+                break
+            else:
+                all_window_height.append(check_height)  # 如果不想等，将当前页面最大高度加入列表。
+
+        data = driver.find_element_by_class_name('keep-wrapper')
+        print(len(data.find_elements_by_class_name('name')))
+        for tr in data.find_elements_by_class_name('name'):
+            print(tr.text)
+            fout.write(tr.text + '\n')
 
 process_spider()
+
+
+
 
 

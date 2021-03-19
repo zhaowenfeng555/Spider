@@ -64,25 +64,33 @@ def process_spider():
     :return:
     """
     fout = open('./result', 'w+')
-    for i in [10]:
-        # 本地保留一份数据
-        # file = open("./data/weibo_hot" + str(self.event_day) + "." + str(self.event_hour) + ".txt", "w+")
-        # mysql_list = []
-        # 获取url原始数据
+    # for i in range(1, 80):
+    #     # 本地保留一份数据
+    #     # file = open("./data/weibo_hot" + str(self.event_day) + "." + str(self.event_hour) + ".txt", "w+")
+    #     # mysql_list = []
+    #     # 获取url原始数据
 
-        url = 'https://creator.douyin.com/billboard/' + str(i)
-        soup = fetch_url(url)
-        # data = soup.find('d', {'class': 'o-pagemod-bd'}).find('div', {'class': 'o-exercise-list'})
-        # # 拉取每一个热搜榜数据
-        # for tr in data.find_all('li', {'class': 'hvr-glow'}):
-        #     dd = tr.find('div', {'class': 'avatar-pic'}).find('img')
-        #     x = str(dd).split('\"')
-        #     word = x[1].strip().split()[0]
-        #     fout.write(word + '\n')
-        data = soup.find('tbody', {'class': 'semi-table-tobody'})
-        x = data.find_all('td')[1].find('p')
-        print (x.text)
+    url = 'https://sh.58.com/shenghuo.shtml?'
+    soup = fetch_url(url)
+    data = soup.find('div', {'class': 'nav-content__catebox__sublist _sublist'})
+    # 拉取每一个热搜榜数据
+    for tr in data.find_all('li', {'class': 'nav-content__catebox__catecss _catecss'}):
+        for dd in tr.find('dd').find_all('a'):
+            print (dd.text)
 
 process_spider()
+
+# 二轮打印
+pinyin = "zhao'wen'feng"
+first_jp = pinyin.split('\'')[0][0]
+second_jp = pinyin.split('\'')[1][0]
+last_1_first = pinyin.split('\'')[-1][0]
+last_2_last = pinyin.split('\'')[-2][-1]
+top2 = ''.join([first_jp, second_jp])
+last2 = ''.join([last_2_last, last_1_first])
+
+
+sorted
+
 
 
